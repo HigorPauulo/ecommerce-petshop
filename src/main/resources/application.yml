@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: ecommerce-petshop
+
+  datasource:
+    # Defaults servem pro Docker local; em producao sobrescreva via variaveis de ambiente
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/ecommerce_petshop}
+    username: ${DB_USERNAME:petshop}
+    password: ${DB_PASSWORD:petshop}
+
+  jpa:
+    hibernate:
+      # Flyway e dono do schema; o Hibernate so valida o mapeamento contra o banco
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+
+# Configuracao do JWT (segredo SEMPRE via variavel de ambiente em producao)
+security:
+  jwt:
+    secret: ${JWT_SECRET:troque-este-segredo-de-no-minimo-32-caracteres-para-hs256-ok}
+    expiration-ms: ${JWT_EXPIRATION:86400000}
