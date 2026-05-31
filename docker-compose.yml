@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: petshop-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-ecommerce_petshop}
+      POSTGRES_USER: ${DB_USERNAME:-petshop}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-petshop}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - petshop_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-petshop} -d ${DB_NAME:-ecommerce_petshop}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  petshop_pgdata:
